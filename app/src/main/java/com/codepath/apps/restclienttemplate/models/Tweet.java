@@ -17,6 +17,7 @@ public class Tweet {
     public User user;
     public String createdAt;
 
+
     public Tweet(){}
 
     //deserialize JSON
@@ -30,5 +31,6 @@ public class Tweet {
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
         return tweet;
     }
+
 
 }

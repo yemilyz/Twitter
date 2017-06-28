@@ -11,36 +11,116 @@
         android:layout_height="60dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        app:srcCompat="@android:color/black" />
+        app:srcCompat="@android:color/black"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Username"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/tvBody"
-        android:text="TextView" />
+        android:layout_toEndOf="@+id/ivProfileImage"
+        android:layout_marginLeft="5dp"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/ivProfileImage"
-        android:layout_below="@+id/tvUserName"
+        android:layout_below="@+id/tvHandle"
         android:layout_marginLeft="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:text="TextView"
+        android:ellipsize="end"
         android:maxLines="2"
         android:minLines="1"
-        android:ellipsize="end"/>
+        android:text="Body" />
 
     <TextView
         android:id="@+id/tvCreatedAt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
         android:layout_marginRight="5dp"
-        android:text="TextView" />
+        android:text="CreatedAt"
+        android:layout_alignBaseline="@+id/tvHandle"
+        android:layout_alignBottom="@+id/tvHandle"
+        android:layout_toEndOf="@+id/tvHandle"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/tvHandle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="Handle"
+        android:layout_toEndOf="@+id/tvUserName"
+        android:layout_marginTop="5dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/tvBody"
+        android:layout_alignStart="@+id/tvBody">
+
+        <ImageButton
+            android:id="@+id/ibReply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ibRetweet"
+            android:layout_toStartOf="@+id/ibRetweet"
+            app:srcCompat="@drawable/reply_button_stroke"
+            android:background="#ffffff"/>
+
+        <ImageButton
+            android:id="@+id/ibRetweet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tvBody"
+            android:layout_toStartOf="@+id/ibHeart"
+            app:srcCompat="@drawable/ic_vector_retweet_stroke"
+            android:layout_marginLeft="20dp"
+            android:background="#ffffff"/>
+
+        <TextView
+            android:id="@+id/tvRetweetCount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="2dp"
+            android:text="0,000,000" />
+
+        <ImageButton
+            android:id="@+id/ibHeart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvCreatedAt"
+            android:layout_toStartOf="@+id/linearLayout"
+            app:srcCompat="@drawable/ic_vector_heart_stroke"
+            android:layout_marginLeft="20dp"
+            android:background="#ffffff"
+            />
+
+        <TextView
+            android:id="@+id/tvFavoriteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:text="0,000,000"
+            android:gravity="center_vertical"/>
+
+        <ImageButton
+            android:id="@+id/ibMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_vector_messages_stroke"
+            android:layout_marginLeft="20dp"
+            android:background="#ffffff"/>
+    </LinearLayout>
+
 
 </RelativeLayout>

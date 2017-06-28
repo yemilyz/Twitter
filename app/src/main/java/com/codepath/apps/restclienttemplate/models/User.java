@@ -15,6 +15,8 @@ public class User {
     public long uid;
     public String screenName;
     public String profileImageUrl;
+    public String favoriteCount;
+    public String retweetCount;
 
     public User(){}
 
@@ -27,6 +29,17 @@ public class User {
         user.uid = json.getLong("id");
         user.screenName = json.getString("screen_name");
         user.profileImageUrl = json.getString("profile_image_url");
+        try {
+            user.favoriteCount = json.getString("favourites_count");
+        }
+        catch (Exception e){
+            user.favoriteCount = "0";
+        }
+        try{
+            user.retweetCount = json.getString("retweet_count");
+        } catch(Exception e){
+            user.retweetCount = "0";
+        }
         return user;
     }
 

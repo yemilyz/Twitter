@@ -5,7 +5,16 @@
      such as `res/menu/menu_movies.xml`  -->
     <item
         android:id="@+id/tweetIcon"
-        android:icon="@drawable/tweet_icon"
+        android:icon="@drawable/vector_compose_shortcut"
         android:title="tweet_icon"
-        app:showAsAction="always"></item>
+        app:showAsAction="always"
+        android:orderInCategory="100"></item>
+
+    <item
+        android:id="@+id/miActionProgress"
+        android:title="Loading..."
+        android:visible="false"
+        android:orderInCategory="90"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_view_progress" />
 </menu>

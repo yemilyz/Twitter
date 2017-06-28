@@ -67,6 +67,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public int getItemCount() {
         return mTweets.size(); //if leave at 0, items will not render on screen
     }
+
     //create ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -86,6 +87,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
 
         }
+
+    }
+    public void clear() {
+        mTweets.clear();
+        notifyDataSetChanged();
+    }
+    public void addAll(List<Tweet> list) {
+        mTweets.addAll(list);
+        notifyDataSetChanged();
     }
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
     /*public String getRelativeTimeAgo(String rawJsonDate) {

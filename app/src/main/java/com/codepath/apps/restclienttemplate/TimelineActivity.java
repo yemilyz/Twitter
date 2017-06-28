@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,10 +30,10 @@ public class TimelineActivity extends AppCompatActivity {
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
     private final int REQUEST_CODE = 20;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("info","goes here");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
@@ -54,10 +55,27 @@ public class TimelineActivity extends AppCompatActivity {
         //set adapter
         rvTweets.setAdapter(tweetAdapter);
 
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchTimelineAsync(0);
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         populateTimeline();
+
     }
     private void populateTimeline(){
-        client.getHomeTimeline(new JsonHttpResponseHandler(){
+        client.getHomeTimeline(0, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("TwitterClient", response.toString());
@@ -103,6 +121,51 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void fetchTimelineAsync(int page) {
+        // Send the network request to fetch the updated data
+        // `client` here is an instance of Android Async HTTP
+        // getHomeTimeline is an example endpoint.
+
+        client.getHomeTimeline(0, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                // Remember to CLEAR OUT old items before appending in the new ones
+                tweetAdapter.clear();
+                // ...the data has come back, add new items to your adapter...
+                for (int i=0; i<response.length();i++){
+                    Tweet tweet = null;
+                    try {
+                        tweet = Tweet.fromJSON(response.getJSONObject(i));
+                        tweets.add(tweet);
+                        tweetAdapter.notifyItemInserted(tweets.size()-1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("DEBUG", "Fetch timeline error: " + throwable.toString());
+                //super.onFailure(statusCode, headers, responseString, throwable);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", "Fetch timeline error: " + throwable.toString());
+                //super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.d("DEBUG", "Fetch timeline error: " + throwable.toString());
+                //super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -122,13 +185,14 @@ public class TimelineActivity extends AppCompatActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(REQUEST_CODE == requestCode) {
+        if(REQUEST_CODE == requestCode && RESULT_OK == resultCode) {
             // Append this tweet to the top of the feed
-            Tweet newTweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("newTweet"));
-            Log.i("info","goes here");
+            Tweet newTweet = (Tweet) Parcels.unwrap(data.getParcelableExtra(Tweet.class.getSimpleName()));
             tweets.add(0, newTweet);
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
+        }else{
+            Toast.makeText(this, "Failed to submit tweet", Toast.LENGTH_SHORT);
         }
     }
 

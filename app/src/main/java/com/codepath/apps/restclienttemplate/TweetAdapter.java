@@ -90,6 +90,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         String formattedTime = TimeFormatter.getTimeDifference(tweet.createdAt);
         holder.tvCreatedAt.setText("\u00b7 "+formattedTime);
+        if(tweet.isFavorited) {
+            holder.ibHeart.setImageResource(R.drawable.ic_vector_heart);
+        } else {
+            holder.ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
+        }
 
     }
 
@@ -139,7 +144,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
+            final int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION){
                 final Tweet tweet = mTweets.get(position);
                 switch(v.getId()){
@@ -151,11 +156,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                     Tweet tweet = null;
                                     try {
                                         tweet = Tweet.fromJSON(response);
+                                        mTweets.set(position, tweet);
+                                        setFavorited(tweet);
                                         ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+                                    //tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
                                 }
 
                                 @Override
@@ -181,11 +188,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                     Tweet tweet = null;
                                     try {
                                         tweet = Tweet.fromJSON(response);
+                                        mTweets.set(position,tweet);
+                                        setFavorited(tweet);
                                         ibHeart.setImageResource(R.drawable.ic_vector_heart);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+                                    //tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
 
                                 }
                                 @Override
@@ -213,11 +222,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                     Tweet tweet = null;
                                     try {
                                         tweet = Tweet.fromJSON(response);
+                                        mTweets.set(position, tweet);
+                                        setFavorited(tweet);
                                         ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+                                    //tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
                                 }
 
                                 @Override
@@ -236,20 +247,22 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                 }
                             });
 
-                        }else {
-                            client.setFavorite(tweet.uid, new JsonHttpResponseHandler() {
+                        }else{
+                            client.setFavorite(tweet.uid, new JsonHttpResponseHandler(){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     Tweet tweet = null;
                                     try {
                                         tweet = Tweet.fromJSON(response);
+                                        mTweets.set(position,tweet);
+                                        setFavorited(tweet);
                                         ibHeart.setImageResource(R.drawable.ic_vector_heart);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
-                                }
+                                    //tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
 
+                                }
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                                     Log.d("DEBUG", "Failed to favorite: " + throwable.toString());
@@ -267,14 +280,138 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                             });
                         }
                         break;
-                    case R.id.ibReply:
+                    case R.id.ibReply: //TODO
                         Toast.makeText(context, "reply", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.ibRetweet:
-                        Toast.makeText(context, "retweet", Toast.LENGTH_SHORT).show();
+                        if(position != RecyclerView.NO_POSITION) {
+                            if (tweet.isRetweeted) {
+                                // Unretweet the tweet
+                                client.postNotRetweet(tweet.uid, new JsonHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        Tweet tweet = null;
+                                        try {
+                                            tweet = Tweet.fromJSON(response);
+                                            mTweets.set(position, tweet);
+                                            setRetweeted(tweet);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+                                });
+                            } else {
+                                // Retweet the tweet
+                                client.postRetweet(tweet.uid, new JsonHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        Tweet tweet = null;
+                                        try {
+                                            tweet = Tweet.fromJSON(response);
+                                            mTweets.set(position, tweet);
+                                            setRetweeted(tweet);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+                                });
+                            }
+                        }
                         break;
                     case R.id.tvRetweetCount:
-                        Toast.makeText(context, "retweet", Toast.LENGTH_SHORT).show();
+                        if(position != RecyclerView.NO_POSITION) {
+                            if (tweet.isRetweeted) {
+                                // Unretweet the tweet
+                                client.postNotRetweet(tweet.uid, new JsonHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        Tweet tweet = null;
+                                        try {
+                                            tweet = Tweet.fromJSON(response);
+                                            mTweets.set(position, tweet);
+                                            setRetweeted(tweet);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+                                });
+                            } else {
+                                // Retweet the tweet
+                                client.postRetweet(tweet.uid, new JsonHttpResponseHandler() {
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        Tweet tweet = null;
+                                        try {
+                                            tweet = Tweet.fromJSON(response);
+                                            mTweets.set(position, tweet);
+                                            setRetweeted(tweet);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                        Log.d("DEBUG", "Failed to untweet: " + throwable.toString());
+                                    }
+                                });
+                            }
+                        }
                         break;
                     case R.id.ibMessage:
                         Toast.makeText(context, "message", Toast.LENGTH_SHORT).show();
@@ -288,16 +425,36 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 }
             }
         }
+        public void setFavorited(Tweet tweet) {
+            // Set the tweet favorited status
+            if(tweet.isFavorited) {
+                ibHeart.setImageResource(R.drawable.ic_vector_heart);
+            } else {
+                ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
+            }
+            // Set the number of favorited tweets
+            tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+        }
+
+        public void setRetweeted(Tweet tweet) {
+            // Set the tweet retweeted status
+            if(tweet.isRetweeted) {
+                ibRetweet.setImageResource(R.drawable.ic_vector_retweet);
+            } else {
+                ibRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
+            }
+            tvRetweetCount.setText(String.valueOf(tweet.retweetCount));
+        }
     }
     public void clear() {
         mTweets.clear();
         notifyDataSetChanged();
     }
 
-//    public void addAll(List<Tweet> list) {
-//        mTweets.addAll(list);
-//        notifyDataSetChanged();
-//    }
+    public void addAll(List<Tweet> list) {
+        mTweets.addAll(list);
+        notifyDataSetChanged();
+    }
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
     /*public String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";

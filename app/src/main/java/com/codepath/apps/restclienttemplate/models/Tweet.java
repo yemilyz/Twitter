@@ -59,6 +59,8 @@ public class Tweet {
             JSONArray mediaArray = jsonObject.getJSONObject("entities").getJSONArray("media");
             if (mediaArray != null) {
                 tweet.mediaURL = mediaArray.getJSONObject(0).getString("media_url");
+            }else{
+                tweet.mediaURL = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,6 +69,23 @@ public class Tweet {
 
         return tweet;
     }
+
+    public static ArrayList<Tweet> fromJSONArray(JSONArray jsonArray) {
+        ArrayList<Tweet> tweets = new ArrayList<>();
+        for(int i = 0; i < jsonArray.length(); i++){
+            try {
+                JSONObject tweetJson = jsonArray.getJSONObject(i);
+                Tweet tweet = Tweet.fromJSON(tweetJson);
+                if (tweet != null) {
+                    tweets.add(i,tweet);
+                    }
+                } catch (JSONException e) {
+                e.printStackTrace();
+                continue;
+                }
+            }
+        return tweets;
+        }
 
 
         //tweet.retweetedStatus = RetweetedStatus.fromJSON(jsonObject.getJSONObject("retweeted_status"));

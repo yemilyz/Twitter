@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:background="#ffffff">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -71,17 +72,14 @@
             android:id="@+id/ibReply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/ibRetweet"
-            android:layout_toStartOf="@+id/ibRetweet"
             app:srcCompat="@drawable/reply_button_stroke"
-            android:background="#ffffff"/>
+            android:background="#ffffff"
+            />
 
         <ImageButton
             android:id="@+id/ibRetweet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/tvBody"
-            android:layout_toStartOf="@+id/ibHeart"
             app:srcCompat="@drawable/ic_vector_retweet_stroke"
             android:layout_marginLeft="20dp"
             android:background="#ffffff"/>
@@ -98,8 +96,6 @@
             android:id="@+id/ibHeart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvCreatedAt"
-            android:layout_toStartOf="@+id/linearLayout"
             app:srcCompat="@drawable/ic_vector_heart_stroke"
             android:layout_marginLeft="20dp"
             android:background="#ffffff"

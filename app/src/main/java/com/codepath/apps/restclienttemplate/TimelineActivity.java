@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -34,6 +35,7 @@ public class TimelineActivity extends AppCompatActivity {
     private final int REQUEST_CODE = 20;
     private SwipeRefreshLayout swipeContainer;
     MenuItem miActionProgressItem;
+    EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class TimelineActivity extends AppCompatActivity {
         //set adapter
         rvTweets.setAdapter(tweetAdapter);
 
+
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -75,15 +78,19 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager)  {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                populateTimeLine();
+                scrollListener.resetState();
+            }
+        });
     }
     private void populateTimeline(){
         client.getHomeTimeline(0, new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("TwitterClient", response.toString());
-            }
-
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 //Log.d("TwitterClient", response.toString());
@@ -93,11 +100,12 @@ public class TimelineActivity extends AppCompatActivity {
                     //convert each object to a tweet model
                     //add that tweet model to our data source
                     //notify the adapter that we've added an item
-                    Tweet tweet = null;
                     try {
-                        tweet = Tweet.fromJSON(response.getJSONObject(i));
-                        tweets.add(tweet);
-                        tweetAdapter.notifyItemInserted(tweets.size()-1);
+                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+                        if (tweet!=null) {
+                            tweets.add(tweet);
+                            tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -124,12 +132,62 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
+    public void populateTimeLine(){
+        final ArrayList<Tweet> newTweet = null;
+        final int curSize = tweetAdapter.getItemCount();
+        long maxId = curSize > 0 ? tweets.get(curSize - 1).getUid() : 1;
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                //iterate through the JSON array
+                //for each entry, deserialize the JSON object
+                for (int i=0; i<response.length();i++){
+                    //convert each object to a tweet model
+                    //add that tweet model to our data source
+                    //notify the adapter that we've added an item
+                    try {
+                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+                        if (tweet!=null) {
+                             newTweet.add(tweet);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                tweets.addAll(newTweet);
+                tweetAdapter.notifyItemRangeInserted(curSize, newTweet.size()-1);
+                Log.d("DEBUG",tweetAdapter.toString());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                Log.d("TwitterClient", responseString);
+//                throwable.printStackTrace();
+                Log.d("DEBUG","STATUS CODE = " + Integer.toString(statusCode));
+                Log.d("DEBUG",responseString);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                Log.d("TwitterClient", errorResponse.toString());
+//                throwable.printStackTrace();
+                Log.d("DEBUG","STATUS CODE = " + Integer.toString(statusCode));
+                Log.d("DEBUG",errorResponse.toString());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+//                Log.d("TwitterClient", errorResponse.toString());
+//                throwable.printStackTrace();
+                Log.d("DEBUG",errorResponse.toString());
+            }
+        });
+    }
 
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
         // getHomeTimeline is an example endpoint.
-
         client.getHomeTimeline(0, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -137,9 +195,8 @@ public class TimelineActivity extends AppCompatActivity {
                 tweetAdapter.clear();
                 // ...the data has come back, add new items to your adapter...
                 for (int i=0; i<response.length();i++){
-                    Tweet tweet = null;
                     try {
-                        tweet = Tweet.fromJSON(response.getJSONObject(i));
+                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
                         tweets.add(tweet);
                         tweetAdapter.notifyItemInserted(tweets.size()-1);
                     } catch (JSONException e) {
@@ -196,7 +253,7 @@ public class TimelineActivity extends AppCompatActivity {
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
         }else{
-            Toast.makeText(this, "Failed to submit tweet", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Failed to submit tweet", Toast.LENGTH_SHORT).show();
         }
     }
     @Override

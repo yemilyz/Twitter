@@ -35,7 +35,8 @@
         </activity>
         <activity android:name=".TimelineActivity" />
         <activity android:name=".ComposeActivity" />
-        <activity android:name=".TweetDetailsActivity"></activity>
+        <activity android:name=".TweetDetailsActivity" />
+        <activity android:name=".EndlessRecyclerViewScrollListener"></activity>
     </application>
 
 </manifest>

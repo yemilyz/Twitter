@@ -30,6 +30,7 @@ public class Tweet {
     public boolean isFavorited;
     public boolean isRetweeted;
     public String mediaURL;
+    public RetweetedStatus retweetedStatus;
 //    public RetweetedStatus retweetedStatus;
 
     public Tweet(){ super(); }
@@ -65,6 +66,12 @@ public class Tweet {
         } catch (Exception e) {
             e.printStackTrace();
 
+        }
+        try{
+            tweet.retweetedStatus = RetweetedStatus.fromJSON(jsonObject.getJSONObject("retweeted_status"));
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
 
         return tweet;

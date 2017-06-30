@@ -30,13 +30,10 @@
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivProfileImage"
         android:layout_below="@+id/tvHandle"
         android:layout_marginLeft="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:minLines="1"
+        android:layout_marginBottom="5dp"
         android:text="Body" />
 
     <TextView
@@ -59,13 +56,24 @@
         android:layout_toEndOf="@+id/tvUserName"
         android:layout_marginTop="5dp"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivMedia"
+        android:adjustViewBounds="true"
+        android:contentDescription="Twitter media here"
+        android:scaleType="fitXY"
+        android:layout_alignStart="@id/tvBody"
+        android:layout_below="@+id/tvBody"
+        android:layout_alignEnd="@+id/tvBody" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:id="@+id/linearLayout"
-        android:layout_below="@+id/tvBody"
+        android:layout_below="@+id/ivMedia"
         android:layout_alignStart="@+id/tvBody">
 
         <ImageButton

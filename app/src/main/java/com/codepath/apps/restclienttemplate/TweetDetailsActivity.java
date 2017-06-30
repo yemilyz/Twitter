@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 import java.sql.Time;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -34,10 +36,11 @@ import static com.codepath.apps.restclienttemplate.R.id.ibRetweet;
 import static com.codepath.apps.restclienttemplate.R.id.ivMedia;
 import static com.codepath.apps.restclienttemplate.R.id.ivProfileImage;
 import static com.codepath.apps.restclienttemplate.R.id.tvFavoriteCount;
+import static com.codepath.apps.restclienttemplate.R.id.tvFavoriterCounter;
 import static com.codepath.apps.restclienttemplate.R.id.tvRetweetCount;
 import static com.codepath.apps.restclienttemplate.R.id.tweetIcon;
 
-public class TweetDetailsActivity extends AppCompatActivity {
+public class TweetDetailsActivity extends AppCompatActivity{
 
     ImageView ivProfImage;
     TextView tvName;
@@ -52,7 +55,6 @@ public class TweetDetailsActivity extends AppCompatActivity {
     ImageButton ibRetweeter;
     ImageButton ibMessager;
     ImageView ivMedia;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,28 @@ public class TweetDetailsActivity extends AppCompatActivity {
 
         Glide.with(this)
                 .load(tweet.mediaURL)
+                .bitmapTransform(new RoundedCornersTransformation(this,25,0))
                 .into(ivMedia);
+
+        int count = tweet.favoriteCount;
+        if(tweet.isFavorited && tweet.retweetedStatus!=null) {
+            ibHearter.setImageResource(R.drawable.ic_vector_heart);
+            count = tweet.retweetedStatus.favoriteCount;
+        } else if (tweet.isFavorited) {
+            ibHearter.setImageResource(R.drawable.ic_vector_heart);
+        } else if (tweet.retweetedStatus != null && tweet.isFavorited == false){
+            ibHearter.setImageResource(R.drawable.ic_vector_heart_stroke);
+            count = tweet.retweetedStatus.favoriteCount;
+        }else{
+            ibHearter.setImageResource(R.drawable.ic_vector_heart_stroke);
+        }
+        tvFavoriterCount.setText(String.valueOf(count));
+        if(tweet.isRetweeted) {
+        ibRetweeter.setImageResource(R.drawable.ic_vector_retweet);
+        } else {
+        ibRetweeter.setImageResource(R.drawable.ic_vector_retweet_stroke);
+        }
+        tvRetweeterCounter.setText(String.valueOf(tweet.retweetCount));
 
         tvName.setText(tweet.user.name);
         tvScreenName.setText("@"+tweet.user.screenName);
@@ -96,10 +119,13 @@ public class TweetDetailsActivity extends AppCompatActivity {
     }
 
 
+
+
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home){
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -35,7 +35,11 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
+import static com.codepath.apps.restclienttemplate.R.id.ibHeart;
+import static com.codepath.apps.restclienttemplate.R.id.ibRetweet;
+import static com.codepath.apps.restclienttemplate.R.id.ivMedia;
 import static com.codepath.apps.restclienttemplate.R.id.ivProfileImage;
+import static com.codepath.apps.restclienttemplate.R.id.tvFavoriteCount;
 import static com.codepath.apps.restclienttemplate.R.id.tvRetweetCount;
 import static com.codepath.apps.restclienttemplate.models.SampleModel_Table.id;
 
@@ -46,6 +50,7 @@ import static com.codepath.apps.restclienttemplate.models.SampleModel_Table.id;
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     private List<Tweet> mTweets;
+    Tweet tweet;
     Context context;
     TwitterClient client = TwitterApp.getRestClient();
 
@@ -78,23 +83,39 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvBody.setText(tweet.body);
         holder.tvHandle.setText("@"+ tweet.user.screenName);
         holder.tvRetweetCount.setText(String.valueOf(tweet.retweetCount));
-//        if (tweet.isRetweeted){
-//            holder.tvFavoriteCount.setText(String.valueOf(tweet.retweetedStatus.favoriteCount));
-//        }else{
-        holder.tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
-//        }
+        int count = tweet.favoriteCount;
+        if(tweet.isFavorited && tweet.retweetedStatus!=null) {
+            holder.ibHeart.setImageResource(R.drawable.ic_vector_heart);
+            count = tweet.retweetedStatus.favoriteCount;
+        } else if (tweet.isFavorited) {
+            holder.ibHeart.setImageResource(R.drawable.ic_vector_heart);
+        } else if (tweet.retweetedStatus != null && tweet.isFavorited == false){
+            holder.ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
+            count = tweet.retweetedStatus.favoriteCount;
+        }else{
+            holder.ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
+        }
+        holder.tvFavoriteCount.setText(String.valueOf(count));
+        if(tweet.isRetweeted) {
+            holder.ibRetweet.setImageResource(R.drawable.ic_vector_retweet);
+        } else {
+            holder.ibRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
+        }
+        holder.tvRetweetCount.setText(String.valueOf(tweet.retweetCount));
+
+        // Set the number of favorited tweets
         Glide.with(context)
                 .load(tweet.user.profileImageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(context,25,0))
                 .into(holder.ivProfileImage);
 
+        Glide.with(context)
+                .load(tweet.mediaURL)
+                .bitmapTransform(new RoundedCornersTransformation(context,25,0))
+                .into(holder.ivMedia);
+
         String formattedTime = TimeFormatter.getTimeDifference(tweet.createdAt);
         holder.tvCreatedAt.setText("\u00b7 "+formattedTime);
-        if(tweet.isFavorited) {
-            holder.ibHeart.setImageResource(R.drawable.ic_vector_heart);
-        } else {
-            holder.ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
-        }
 
     }
 
@@ -102,11 +123,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public int getItemCount() {
         return mTweets.size(); //if leave at 0, items will not render on screen
     }
-
     //create ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView ivProfileImage;
+        public ImageView ivMedia;
         public TextView tvUsername;
         public TextView tvBody;
         public TextView tvCreatedAt;
@@ -123,6 +144,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
             //perform findViewById lookups
             ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
+            ivMedia = (ImageView) itemView.findViewById(R.id.ivMedia);
             tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvCreatedAt = (TextView) itemView.findViewById(R.id.tvCreatedAt);
@@ -141,6 +163,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvFavoriteCount.setOnClickListener(this);
             ibMessage.setOnClickListener(this);
             itemView.setOnClickListener(this);
+
+
         }
         @Override
         public void onClick(View v) {
@@ -427,13 +451,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
         public void setFavorited(Tweet tweet) {
             // Set the tweet favorited status
-            if(tweet.isFavorited) {
+            int count = tweet.favoriteCount;
+            if(tweet.isFavorited && tweet.retweetedStatus!=null) {
                 ibHeart.setImageResource(R.drawable.ic_vector_heart);
-            } else {
+                count = tweet.retweetedStatus.favoriteCount;
+            } else if (tweet.isFavorited) {
+                ibHeart.setImageResource(R.drawable.ic_vector_heart);
+            } else if (tweet.retweetedStatus != null && tweet.isFavorited == false){
+                ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
+                count = tweet.retweetedStatus.favoriteCount;
+            }else{
                 ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
             }
             // Set the number of favorited tweets
-            tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+            tvFavoriteCount.setText(String.valueOf(count));
         }
 
         public void setRetweeted(Tweet tweet) {
@@ -443,6 +474,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             } else {
                 ibRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
             }
+
             tvRetweetCount.setText(String.valueOf(tweet.retweetCount));
         }
     }

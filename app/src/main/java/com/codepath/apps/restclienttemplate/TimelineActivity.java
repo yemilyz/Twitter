@@ -78,7 +78,7 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager){
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {

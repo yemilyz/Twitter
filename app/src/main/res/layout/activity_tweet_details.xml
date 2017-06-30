@@ -39,12 +39,13 @@
         android:id="@+id/tvTweet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tweet"
-        android:layout_marginLeft="5dp"
-        android:layout_below="@+id/ivProfImage"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="5dp"/>
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ivProfImage"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="Tweet"
+        android:textAppearance="@android:style/TextAppearance.Large" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -53,10 +54,8 @@
         android:adjustViewBounds="true"
         android:contentDescription="Twitter media here"
         android:scaleType="fitXY"
-        android:layout_alignLeft="@id/tvTweet"
         android:layout_alignStart="@id/tvTweet"
         android:layout_below="@+id/tvTweet"
-        android:layout_alignRight="@+id/tvTweet"
         android:layout_alignEnd="@+id/tvTweet"/>
 
     <ImageButton

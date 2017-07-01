@@ -87,7 +87,9 @@ public class TimelineActivity extends AppCompatActivity {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadNextDataFromApi(page);
+                //loadNextDataFromApi(page);
+                int curSize = tweetAdapter.getItemCount();
+                long maxId = curSize > 0 ? tweets.get(curSize - 1).getUid() : 1;
             }
         };
         rvTweets.addOnScrollListener(scrollListener);
@@ -101,21 +103,60 @@ public class TimelineActivity extends AppCompatActivity {
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()
         client.getHomeTimeline(offset, new JsonHttpResponseHandler(){
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//          int curSize = tweetAdapter.getItemCount();
-                tweets.addAll(Tweet.fromJSONArray(response));
-                tweetAdapter.notifyDataSetChanged();
-//           Log.d("DEBUG",tweetAdapter.toString());
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("TwitterClient", response.toString());
+                // Notify the adapter that we've added an item
+                try {
+                    Tweet tweet = Tweet.fromJSON(response);
+                    tweets.add(tweet);
+                    tweetAdapter.notifyItemInserted(tweets.size() - 1);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                //Log.d("TwitterClient", response.toString());
+                //iterate through the JSON array
+                //for each entry, deserialize the JSON object
+                for (int i=0; i<response.length();i++){
+                    //convert each object to a tweet model
+                    //add that tweet model to our data source
+                    //notify the adapter that we've added an item
+                    try {
+                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+                        if (tweet!=null) {
+                            tweets.add(tweet);
+                            tweetAdapter.notifyItemInserted(tweets.size() - 1);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("TwitterClient", responseString);
+                throwable.printStackTrace();
+            }
+
+            @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
+                Log.d("TwitterClient", errorResponse.toString());
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.d("TwitterClient", errorResponse.toString());
+                throwable.printStackTrace();
             }
         });
     }
 
     private void populateTimeline(){
-        client.getHomeTimeline(0, new JsonHttpResponseHandler(){
+        client.getHomeTimeline(1, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 hideProgressBar();

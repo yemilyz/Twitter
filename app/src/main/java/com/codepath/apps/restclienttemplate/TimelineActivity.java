@@ -28,12 +28,15 @@ import cz.msebera.android.httpclient.Header;
 
 public class TimelineActivity extends AppCompatActivity {
 
+    private final int REQUEST_CODE = 20;
+    public static final int REQUEST_CODE_DETAILS = 1;
+
     private TwitterClient client;
+    private SwipeRefreshLayout swipeContainer;
+
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
     RecyclerView rvTweets;
-    private final int REQUEST_CODE = 20;
-    private SwipeRefreshLayout swipeContainer;
     MenuItem miActionProgressItem;
     EndlessRecyclerViewScrollListener scrollListener;
 
@@ -110,45 +113,23 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
-//    private void populateTimeLine(long maxId){
-//        client.getHomeTimeline(maxId, new JsonHttpResponseHandler(){
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                //Log.d("TwitterClient", response.toString());
-//                //iterate through the JSON array
-//                //for each entry, deserialize the JSON object
-//                    try {
-//                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
-//                        if (tweet!=null) {
-//                            tweets.add(tweet);
-//                            tweetAdapter.notifyItemInserted(tweets.size() - 1);
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.d("TwitterClient", responseString);
-//                throwable.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                Log.d("TwitterClient", errorResponse.toString());
-//                throwable.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-//                Log.d("TwitterClient", errorResponse.toString());
-//                throwable.printStackTrace();
-//            }
-//        });
-//    }
 
     private void populateTimeline(){
         client.getHomeTimeline(0, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                hideProgressBar();
+                Log.d("TwitterClient", response.toString());
+                // Notify the adapter that we've added an item
+                try {
+                    Tweet tweet = Tweet.fromJSON(response);
+                    tweets.add(tweet);
+                    tweetAdapter.notifyItemInserted(tweets.size() - 1);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 //Log.d("TwitterClient", response.toString());
@@ -257,6 +238,12 @@ public class TimelineActivity extends AppCompatActivity {
             tweets.add(0, newTweet);
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
+        }else if(resultCode == RESULT_OK && requestCode == REQUEST_CODE_DETAILS) {
+            Tweet newTweet = (Tweet) Parcels.unwrap(data.getParcelableExtra(Tweet.class.getSimpleName()));
+            int position = data.getIntExtra("Position", 0);
+            tweets.set(position, newTweet);
+            tweetAdapter.notifyItemChanged(position);
+            rvTweets.scrollToPosition(position);
         }else{
             Toast.makeText(this, "Failed to submit tweet", Toast.LENGTH_SHORT).show();
         }

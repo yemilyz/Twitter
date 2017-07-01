@@ -26,58 +26,55 @@ import org.w3c.dom.Text;
 import java.sql.Time;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-import static com.codepath.apps.restclienttemplate.R.id.ibHeart;
-import static com.codepath.apps.restclienttemplate.R.id.ibMessage;
-import static com.codepath.apps.restclienttemplate.R.id.ibReply;
-import static com.codepath.apps.restclienttemplate.R.id.ibRetweet;
-import static com.codepath.apps.restclienttemplate.R.id.ivMedia;
-import static com.codepath.apps.restclienttemplate.R.id.ivProfileImage;
-import static com.codepath.apps.restclienttemplate.R.id.tvFavoriteCount;
-import static com.codepath.apps.restclienttemplate.R.id.tvFavoriterCounter;
-import static com.codepath.apps.restclienttemplate.R.id.tvRetweetCount;
-import static com.codepath.apps.restclienttemplate.R.id.tweetIcon;
+import static com.codepath.apps.restclienttemplate.R.id.ibRetweeter;
+
 
 public class TweetDetailsActivity extends AppCompatActivity{
 
-    ImageView ivProfImage;
-    TextView tvName;
-    TextView tvScreenName;
-    TextView tvTweet;
-    TextView tvFavoriterCount;
-    TextView tvRetweeterCounter;
+    private TwitterClient client;
     Tweet tweet;
-    TextView tvTimeStamper;
-    ImageButton ibHearter;
-    ImageButton ibRespond;
-    ImageButton ibRetweeter;
-    ImageButton ibMessager;
-    ImageView ivMedia;
+    private int position;
+
+    @BindView(R.id.ivProfImage) ImageView ivProfImage;
+    @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.tvScreenName) TextView tvScreenName;
+    @BindView(R.id.tvTweet) TextView tvTweet;
+    @BindView(R.id.tvFavoriterCounter) TextView tvFavoriterCounter;
+    @BindView(R.id.tvRetweeterCounter) TextView tvRetweeterCounter;
+    @BindView(R.id.tvTimeStamper) TextView tvTimeStamper;
+    @BindView(R.id.ibHearter) ImageButton ibHearter;
+    @BindView(R.id.ibRespond) ImageButton ibRespond;
+    @BindView(R.id.ibRetweeter) ImageButton ibRetweeter;
+    @BindView(R.id.ibMessager) ImageButton ibMessager;
+    @BindView(R.id.ivMedia) ImageView ivMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_details);
-        if (getSupportActionBar()!=null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        }
-        ivProfImage = (ImageView) findViewById(R.id.ivProfImage);
-        tvName = (TextView) findViewById(R.id.tvName);
-        tvScreenName = (TextView) findViewById(R.id.tvScreenName);
-        tvTweet = (TextView) findViewById(R.id.tvTweet);
-        tvTimeStamper = (TextView) findViewById(R.id.tvTimeStamper);
-        tvFavoriterCount = (TextView) findViewById(R.id.tvFavoriterCounter);
-        tvRetweeterCounter = (TextView) findViewById(R.id.tvRetweeterCounter);
-        ibHearter = (ImageButton) findViewById(R.id.ibHearter);
-        ibRespond = (ImageButton) findViewById(R.id.ibRespond);
-        ibRetweeter = (ImageButton) findViewById(R.id.ibRetweeter);
-        ibMessager = (ImageButton) findViewById(R.id.ibMessager);
-        ivMedia = (ImageView) findViewById(R.id.ivMedia);
-        ivMedia.setImageResource(android.R.color.transparent);
+        ButterKnife.bind(this);
+        client = TwitterApp.getRestClient();
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
+        position = getIntent().getIntExtra("Position", 0);
+
+//        ivProfImage = (ImageView) findViewById(R.id.ivProfImage);
+//        tvName = (TextView)findViewById(R.id.tvName);
+//        tvScreenName = (TextView) findViewById(R.id.tvScreenName);
+//        tvTweet = (TextView)findViewById(R.id.tvTweet);
+//        tvFavoriterCounter = (TextView) findViewById(R.id.tvFavoriterCounter);
+//        tvRetweeterCounter = (TextView) findViewById(R.id.tvRetweeterCounter);
+//        tvTimeStamper = (TextView) findViewById(R.id.tvTimeStamper);
+//        ibHearter = (ImageButton) findViewById(R.id.ibHearter);
+//        ibRespond = (ImageButton) findViewById(R.id.ibRespond);
+//        ibRetweeter = (ImageButton) findViewById(R.id.ibRetweeter);
+//        ibMessager = (ImageButton) findViewById(R.id.ibMessager);
+//        ivMedia = (ImageView) findViewById(R.id.ivMedia);
 
         Glide.with(this)
                 .load(tweet.user.profileImageUrl)
@@ -101,11 +98,12 @@ public class TweetDetailsActivity extends AppCompatActivity{
         }else{
             ibHearter.setImageResource(R.drawable.ic_vector_heart_stroke);
         }
-        tvFavoriterCount.setText(String.valueOf(count));
+        tvFavoriterCounter.setText(String.valueOf(count));
+
         if(tweet.isRetweeted) {
-        ibRetweeter.setImageResource(R.drawable.ic_vector_retweet);
+            ibRetweeter.setImageResource(R.drawable.ic_vector_retweet);
         } else {
-        ibRetweeter.setImageResource(R.drawable.ic_vector_retweet_stroke);
+            ibRetweeter.setImageResource(R.drawable.ic_vector_retweet_stroke);
         }
         tvRetweeterCounter.setText(String.valueOf(tweet.retweetCount));
 
@@ -113,19 +111,207 @@ public class TweetDetailsActivity extends AppCompatActivity{
         tvScreenName.setText("@"+tweet.user.screenName);
         tvTweet.setText(tweet.body);
         tvTimeStamper.setText(TimeFormatter.getTimeStamp(tweet.createdAt));
-        tvRetweeterCounter.setText(tweet.retweetCount+ " Retweets");
-        tvFavoriterCount.setText(tweet.favoriteCount+" Favorites");
-
+        setFavorited();
+        setRetweeted();
     }
-
-
-
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
-            finish();
+    public void setFavorited() {
+        // Set the tweet favorited status
+        int count = tweet.favoriteCount;
+        if(tweet.isFavorited && tweet.retweetedStatus!=null) {
+            ibHearter.setImageResource(R.drawable.ic_vector_heart);
+            count = tweet.retweetedStatus.favoriteCount;
+        } else if (tweet.isFavorited) {
+            ibHearter.setImageResource(R.drawable.ic_vector_heart);
+        } else if (tweet.retweetedStatus != null && tweet.isFavorited == false){
+            ibHearter.setImageResource(R.drawable.ic_vector_heart_stroke);
+            count = tweet.retweetedStatus.favoriteCount;
+        }else{
+            ibHearter.setImageResource(R.drawable.ic_vector_heart_stroke);
         }
-        return super.onOptionsItemSelected(item);
+        // Set the number of favorited tweets
+        tvFavoriterCounter.setText(String.valueOf(count));
     }
 
+    public void setRetweeted() {
+        // Set the retweeted status
+        if (tweet.isRetweeted) {
+            ibRetweeter.setImageResource(R.drawable.ic_vector_retweet);
+        } else {
+            ibRetweeter.setImageResource(R.drawable.ic_vector_retweet_stroke);
+        }
+        // Set the number of retweets
+        tvRetweeterCounter.setText(String.valueOf(tweet.retweetCount));
+    }
+
+
+    @OnClick(R.id.ibRetweeter)
+    public void putRetweet() {
+        if(tweet.isRetweeted) {
+            client.postNotRetweet(tweet.uid, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        int oldRetweetCount = tweet.retweetCount;
+                        tweet = Tweet.fromJSON(response);
+                        if(tweet.isRetweeted) {
+                            tweet.isRetweeted = false;
+                        }
+                        if(tweet.retweetCount > oldRetweetCount - 1) {
+                            tweet.retweetCount = oldRetweetCount - 1;
+                        }
+                        setRetweeted();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
+        } else {
+            client.postRetweet(tweet.uid, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        int oldRetweetCount = tweet.retweetCount;
+                        tweet = Tweet.fromJSON(response);
+                        if(!tweet.isRetweeted) {
+                            tweet.isRetweeted = true;
+                        }
+                        if(tweet.retweetCount < oldRetweetCount + 1) {
+                            tweet.retweetCount = oldRetweetCount + 1;
+                        }
+                        setRetweeted();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
+        }
+    }
+
+    @OnClick(R.id.ibHearter)
+    public void putFavorite() {
+        if(tweet.isFavorited) {
+            client.setUnfavorite(tweet.uid, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        int oldFavoriteCount = tweet.favoriteCount;
+                        if (tweet.retweetedStatus!=null){
+                            oldFavoriteCount = tweet.retweetedStatus.favoriteCount;
+                        }
+                        tweet = Tweet.fromJSON(response);
+                        if(tweet.isFavorited) {
+                            tweet.isFavorited = false;
+                        }
+                        if(tweet.favoriteCount > oldFavoriteCount - 1) {
+                            tweet.favoriteCount = oldFavoriteCount - 1;
+                        }
+                        setFavorited();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+
+
+            });
+            // Change the icon
+        } else {
+            // Favorite the tweet
+            client.setFavorite(tweet.uid, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        int oldFavoriteCount = tweet.favoriteCount;
+                        if (tweet.retweetedStatus!=null){
+                            oldFavoriteCount = tweet.retweetedStatus.favoriteCount;
+                        }
+                        tweet = Tweet.fromJSON(response);
+                        if(!tweet.isFavorited) {
+                            tweet.isFavorited = true;
+                        }
+                        if(tweet.favoriteCount < oldFavoriteCount + 1) {
+                            tweet.favoriteCount = oldFavoriteCount + 1;
+                        }
+                        setFavorited();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                }
+            });
+
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        Log.e("BackPressed", "started");
+        Intent i = new Intent();
+        i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+        i.putExtra("Position", position);
+        setResult(RESULT_OK, i);
+        finish();
+    }
 }

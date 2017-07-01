@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.media.Image;
 import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,13 +37,8 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-import static com.codepath.apps.restclienttemplate.R.id.ibHeart;
-import static com.codepath.apps.restclienttemplate.R.id.ibRetweet;
-import static com.codepath.apps.restclienttemplate.R.id.ivMedia;
-import static com.codepath.apps.restclienttemplate.R.id.ivProfileImage;
-import static com.codepath.apps.restclienttemplate.R.id.tvFavoriteCount;
-import static com.codepath.apps.restclienttemplate.R.id.tvRetweetCount;
-import static com.codepath.apps.restclienttemplate.models.SampleModel_Table.id;
+import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_DETAILS;
+
 
 /**
  * Created by emilyz on 6/26/17.
@@ -50,9 +47,9 @@ import static com.codepath.apps.restclienttemplate.models.SampleModel_Table.id;
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     private List<Tweet> mTweets;
-    Tweet tweet;
     Context context;
     TwitterClient client = TwitterApp.getRestClient();
+    LayoutInflater inflater;
 
     //pass in Tweets array in the constructor
     public  TweetAdapter(List<Tweet> tweets){
@@ -63,11 +60,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        inflater = LayoutInflater.from(context);
 
         View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
         ViewHolder viewHolder = new ViewHolder(tweetView);
         return viewHolder;
+    }
+    public TweetAdapter(Context context, AdapterView.OnItemClickListener listener, List<Tweet> tweets) {
+        inflater = LayoutInflater.from(context);
+        this.mTweets = tweets;
+//        this.onItemClickListener = listener;
     }
 
     //bind values based on position of the element
@@ -79,10 +81,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         //populate the views according to this data
         holder.tvUsername.setText(tweet.user.name);
-        //holder.tvUsername.setTypeface(null, Typeface.BOLD);
         holder.tvBody.setText(tweet.body);
         holder.tvHandle.setText("@"+ tweet.user.screenName);
         holder.tvRetweetCount.setText(String.valueOf(tweet.retweetCount));
+
         int count = tweet.favoriteCount;
         if(tweet.isFavorited && tweet.retweetedStatus!=null) {
             holder.ibHeart.setImageResource(R.drawable.ic_vector_heart);
@@ -96,6 +98,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             holder.ibHeart.setImageResource(R.drawable.ic_vector_heart_stroke);
         }
         holder.tvFavoriteCount.setText(String.valueOf(count));
+
+
         if(tweet.isRetweeted) {
             holder.ibRetweet.setImageResource(R.drawable.ic_vector_retweet);
         } else {
@@ -103,7 +107,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
         holder.tvRetweetCount.setText(String.valueOf(tweet.retweetCount));
 
-        // Set the number of favorited tweets
+
         Glide.with(context)
                 .load(tweet.user.profileImageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(context,25,0))
@@ -444,7 +448,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         //tweet = mTweets.get(position);
                         Intent intent = new Intent(context, TweetDetailsActivity.class);
                         intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-                        context.startActivity(intent);
+                        intent.putExtra("Position", position);
+                        ((AppCompatActivity)context).startActivityForResult(intent, REQUEST_CODE_DETAILS);
                         break;
                 }
             }
@@ -487,21 +492,4 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         mTweets.addAll(list);
         notifyDataSetChanged();
     }
-    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
-    /*public String getRelativeTimeAgo(String rawJsonDate) {
-        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-        sf.setLenient(true);
-
-        String relativeDate = "";
-        try {
-            long dateMillis = sf.parse(rawJsonDate).getTime();
-            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return relativeDate;
-    }*/
 }

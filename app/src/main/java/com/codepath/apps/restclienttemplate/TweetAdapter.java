@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -34,10 +35,13 @@ import org.w3c.dom.Text;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_DETAILS;
+import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_REPLY;
 
 
 /**
@@ -47,13 +51,21 @@ import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     private List<Tweet> mTweets;
+    private TweetAdapterListener mListener;
     Context context;
     TwitterClient client = TwitterApp.getRestClient();
     LayoutInflater inflater;
 
+    //define an interface required by viewholder
+    public interface TweetAdapterListener{
+        public void onItemSelected(View v, int position);
+
+    }
+
     //pass in Tweets array in the constructor
-    public  TweetAdapter(List<Tweet> tweets){
+    public  TweetAdapter(List<Tweet> tweets, TweetAdapterListener listener){
         mTweets = tweets;
+        mListener = listener;
 
     }
     //for each row, inflate layout and cache references (all the findById lookups) into ViewHolder class
@@ -130,36 +142,24 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     //create ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public ImageView ivProfileImage;
-        public ImageView ivMedia;
-        public TextView tvUsername;
-        public TextView tvBody;
-        public TextView tvCreatedAt;
-        public TextView tvHandle;
-        public TextView tvRetweetCount;
-        public TextView tvFavoriteCount;
-        public ImageButton ibHeart;
-        public ImageButton ibReply;
-        public ImageButton ibMessage;
-        public ImageButton ibRetweet;
+        @BindView( R.id.ivProfileImage ) ImageView ivProfileImage;
+        @BindView( R.id.ivMedia ) ImageView ivMedia;
+        @BindView( R.id.tvUserName ) TextView tvUsername;
+        @BindView( R.id.tvBody ) TextView tvBody;
+        @BindView( R.id.tvCreatedAt ) TextView tvCreatedAt;
+        @BindView( R.id.tvHandle ) TextView tvHandle;
+        @BindView( R.id.tvRetweetCount ) TextView tvRetweetCount;
+        @BindView( R.id.tvFavoriteCount ) TextView tvFavoriteCount;
+        @BindView( R.id.ibHeart ) ImageButton ibHeart;
+        @BindView( R.id.ibReply ) ImageButton ibReply;
+        @BindView( R.id.ibMessage ) ImageButton ibMessage;
+        @BindView( R.id.ibRetweet ) ImageButton ibRetweet;
 
         public ViewHolder(View itemView){
             super(itemView);
 
             //perform findViewById lookups
-            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
-            ivMedia = (ImageView) itemView.findViewById(R.id.ivMedia);
-            tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
-            tvBody = (TextView) itemView.findViewById(R.id.tvBody);
-            tvCreatedAt = (TextView) itemView.findViewById(R.id.tvCreatedAt);
-            tvHandle = (TextView) itemView.findViewById(R.id.tvHandle);
-            tvRetweetCount = (TextView) itemView.findViewById(R.id.tvRetweetCount);
-            tvFavoriteCount = (TextView) itemView.findViewById(R.id.tvFavoriteCount);
-            ibHeart = (ImageButton) itemView.findViewById(R.id.ibHeart);
-            ibReply = (ImageButton) itemView.findViewById(R.id.ibReply);
-            ibMessage = (ImageButton) itemView.findViewById(R.id.ibMessage);
-            ibRetweet = (ImageButton) itemView.findViewById(R.id.ibRetweet);
-
+            ButterKnife.bind( this, itemView );
             ibRetweet.setOnClickListener(this);
             tvRetweetCount.setOnClickListener(this);
             ibReply.setOnClickListener(this);
@@ -167,6 +167,19 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvFavoriteCount.setOnClickListener(this);
             ibMessage.setOnClickListener(this);
             itemView.setOnClickListener(this);
+
+            //handle row click event
+            itemView.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener!=null){
+                        //get position of element
+                        int position = getAdapterPosition();
+                        //fire listener callback
+                        mListener.onItemSelected( view, position  );
+                    }
+                }
+            } );
 
 
         }
@@ -308,8 +321,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                             });
                         }
                         break;
-                    case R.id.ibReply: //TODO
+                    case R.id.ibReply:
                         Toast.makeText(context, "reply", Toast.LENGTH_SHORT).show();
+                        if(position != RecyclerView.NO_POSITION) {
+                            if (position != RecyclerView.NO_POSITION) {
+                                Intent i = new Intent(context, ReplyActivity.class);
+                                i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                                ((AppCompatActivity) context).startActivityForResult(i, REQUEST_CODE_REPLY);
+                                }
+                            }
                         break;
                     case R.id.ibRetweet:
                         if(position != RecyclerView.NO_POSITION) {

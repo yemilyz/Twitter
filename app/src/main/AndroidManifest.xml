@@ -10,7 +10,7 @@
     <application
         android:name=".TwitterApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_twitter"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
@@ -36,7 +36,9 @@
         <activity android:name=".TimelineActivity" />
         <activity android:name=".ComposeActivity" />
         <activity android:name=".TweetDetailsActivity" />
-        <activity android:name=".EndlessRecyclerViewScrollListener"></activity>
+        <activity android:name=".EndlessRecyclerViewScrollListener" />
+        <activity android:name=".ReplyActivity" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>

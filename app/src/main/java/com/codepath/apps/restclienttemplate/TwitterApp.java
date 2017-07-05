@@ -17,7 +17,7 @@ import android.content.Context;
  *
  */
 public class TwitterApp extends Application {
-	private static Context context;
+	public static Context context;
 
 	@Override
 	public void onCreate() {

@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SimpleTweet</string>
+    <string name="app_name">TweetyTwit</string>
     <string name="login_label">Log in</string>
     <string name="intent_scheme">oauth</string>
     <string name="intent_host">cprest</string>
     <string name="my_hint">What\'s happening?</string>
+    <string name="submit">Submit</string>
+    <string name="retweet">Retweets</string>
+    <string name="likes">Likes</string>
+    <string name="favcount">FavoriteCounter</string>
+    <string name="retweetcount">RetweetCounter</string>
+    <string name="username">Username</string>
+    <string name="handle">Handle</string>
+    <string name="timestamp">Timestamp</string>
+    <string name="body">Tweet</string>
+    <string name="Media">Twitter Media</string>
 
 </resources>

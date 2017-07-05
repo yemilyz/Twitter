@@ -19,7 +19,7 @@
         android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username"
+        android:text="@string/username"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_marginLeft="5dp"
@@ -34,14 +34,14 @@
         android:layout_marginLeft="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:layout_marginBottom="5dp"
-        android:text="Body" />
+        android:text="@string/body" />
 
     <TextView
         android:id="@+id/tvCreatedAt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
-        android:text="CreatedAt"
+        android:text="@string/timestamp"
         android:layout_alignBaseline="@+id/tvHandle"
         android:layout_alignBottom="@+id/tvHandle"
         android:layout_toEndOf="@+id/tvHandle"
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:text="Handle"
+        android:text="@string/handle"
         android:layout_toEndOf="@+id/tvUserName"
         android:layout_marginTop="5dp"/>
 
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/ivMedia"
         android:adjustViewBounds="true"
-        android:contentDescription="Twitter media here"
+        android:contentDescription="@string/Media"
         android:scaleType="fitXY"
         android:layout_alignStart="@id/tvBody"
         android:layout_below="@+id/tvBody"
@@ -98,7 +98,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:layout_marginLeft="2dp"
-            android:text="0,000,000" />
+            android:text="@string/retweetcount" />
 
         <ImageButton
             android:id="@+id/ibHeart"
@@ -114,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="2dp"
-            android:text="0,000,000"
+            android:text="@string/favcount"
             android:gravity="center_vertical"/>
 
         <ImageButton

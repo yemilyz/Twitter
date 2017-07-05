@@ -17,7 +17,10 @@ public class User {
     public long uid;
     public String screenName;
     public String profileImageUrl;
-//    public int favoriteCount;
+
+    public String tagLine;
+    public int followersCount;
+    public int followingCount;
 
     public User(){ super(); }
 
@@ -36,13 +39,16 @@ public class User {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//        try {
-//            user.favoriteCount = json.getInt("favorite_count");
-//        }
-//        catch (Exception e){
-//            //user.favoriteCount = 0;
-//            Log.d("DEBUG", "error");
-//        }
+
+        try{ user.tagLine = json.getString( "description" ); }
+        catch (Exception e){ e.printStackTrace(); }
+
+        try{ user.followersCount = json.getInt( "followers_count" ); }
+        catch (Exception e){ e.printStackTrace(); }
+
+        try{ user.followingCount = json.getInt( "friends_count" ); }
+        catch (Exception e){ e.printStackTrace(); }
+
         return user;
     }
 

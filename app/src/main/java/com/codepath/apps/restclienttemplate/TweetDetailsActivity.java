@@ -33,6 +33,8 @@ import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static com.codepath.apps.restclienttemplate.R.id.ibRetweeter;
+import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_REPLY;
+import static com.codepath.apps.restclienttemplate.TwitterApp.context;
 
 
 public class TweetDetailsActivity extends AppCompatActivity{
@@ -62,19 +64,6 @@ public class TweetDetailsActivity extends AppCompatActivity{
         client = TwitterApp.getRestClient();
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
         position = getIntent().getIntExtra("Position", 0);
-
-//        ivProfImage = (ImageView) findViewById(R.id.ivProfImage);
-//        tvName = (TextView)findViewById(R.id.tvName);
-//        tvScreenName = (TextView) findViewById(R.id.tvScreenName);
-//        tvTweet = (TextView)findViewById(R.id.tvTweet);
-//        tvFavoriterCounter = (TextView) findViewById(R.id.tvFavoriterCounter);
-//        tvRetweeterCounter = (TextView) findViewById(R.id.tvRetweeterCounter);
-//        tvTimeStamper = (TextView) findViewById(R.id.tvTimeStamper);
-//        ibHearter = (ImageButton) findViewById(R.id.ibHearter);
-//        ibRespond = (ImageButton) findViewById(R.id.ibRespond);
-//        ibRetweeter = (ImageButton) findViewById(R.id.ibRetweeter);
-//        ibMessager = (ImageButton) findViewById(R.id.ibMessager);
-//        ivMedia = (ImageView) findViewById(R.id.ivMedia);
 
         Glide.with(this)
                 .load(tweet.user.profileImageUrl)
@@ -142,6 +131,14 @@ public class TweetDetailsActivity extends AppCompatActivity{
         // Set the number of retweets
         tvRetweeterCounter.setText(String.valueOf(tweet.retweetCount));
     }
+
+    @OnClick(R.id.ibRespond)
+    public void putReply() {
+        Intent i = new Intent(TweetDetailsActivity.this, ReplyActivity.class);
+        i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+        ((AppCompatActivity)context).startActivityForResult(i, REQUEST_CODE_REPLY);
+    }
+
 
 
     @OnClick(R.id.ibRetweeter)

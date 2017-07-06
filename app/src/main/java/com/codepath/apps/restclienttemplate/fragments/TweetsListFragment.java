@@ -1,26 +1,18 @@
-package com.codepath.apps.restclienttemplate.Fragments;
+package com.codepath.apps.restclienttemplate.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.codepath.apps.restclienttemplate.ComposeActivity;
-import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.TimelineActivity;
 import com.codepath.apps.restclienttemplate.TweetAdapter;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
@@ -34,14 +26,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import cz.msebera.android.httpclient.Header;
-
-import static android.app.Activity.RESULT_OK;
-import static com.codepath.apps.restclienttemplate.R.id.swipeContainer;
-import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_DETAILS;
-import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_REPLY;
-import static com.codepath.apps.restclienttemplate.models.SampleModel_Table.id;
 
 
 /**
@@ -52,13 +37,13 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
 
     MenuItem miActionProgressItem;
 
-    TweetAdapter tweetAdapter;
-    ArrayList<Tweet> tweets;
-    RecyclerView rvTweets;
+    public TweetAdapter tweetAdapter;
+    public ArrayList<Tweet> tweets;
+    public RecyclerView rvTweets;
 
     public interface TweetSelectedListener {
         //handle tweet selection
-        public void onTweetSelected(Tweet tweet);
+        public void onTweetSelected(Tweet tweet, int position);
     }
 
     public SwipeRefreshLayout swipeContainer;
@@ -150,7 +135,7 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
     @Override
     public void onItemSelected(View v, int position) {
         Tweet tweet = tweets.get(position);
-        ((TweetSelectedListener) getActivity()).onTweetSelected( tweet );
+        ((TweetSelectedListener) getActivity()).onTweetSelected( tweet, position );
     }
 
     private void populateTimeline(){
@@ -195,6 +180,14 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
         // Hide progress item
         miActionProgressItem.setVisible(false);
     }
+
+    public void appendTweet(Tweet tweet) {
+        tweets.add(0, tweet);
+        // inserted at position 0
+        tweetAdapter.notifyItemInserted(0);
+        rvTweets.scrollToPosition(0);
+    }
+
 //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        if (REQUEST_CODE == requestCode && RESULT_OK == resultCode) {

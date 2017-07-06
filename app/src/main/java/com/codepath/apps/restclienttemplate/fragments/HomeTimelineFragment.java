@@ -1,16 +1,9 @@
-package com.codepath.apps.restclienttemplate.Fragments;
+package com.codepath.apps.restclienttemplate.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.view.Menu;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -19,13 +12,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
-
-import static android.app.Activity.RESULT_OK;
-import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_DETAILS;
-import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_REPLY;
 
 /**
  * Created by emilyz on 7/3/17.

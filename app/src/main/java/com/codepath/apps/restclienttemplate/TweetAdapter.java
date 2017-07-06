@@ -50,8 +50,8 @@ import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
-    private List<Tweet> mTweets;
-//    private TweetAdapterListener mListener;
+    List<Tweet> mTweets;
+    private TweetAdapterListener mListener;
     Context context;
     TwitterClient client = TwitterApp.getRestClient();
     LayoutInflater inflater;
@@ -65,7 +65,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     //pass in Tweets array in the constructor
     public  TweetAdapter(List<Tweet> tweets, TweetAdapterListener listener){
         mTweets = tweets;
-//        mListener = listener;
+        mListener = listener;
 
     }
     //for each row, inflate layout and cache references (all the findById lookups) into ViewHolder class
@@ -169,7 +169,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ivProfileImage.setOnClickListener( this );
             itemView.setOnClickListener(this);
 
-//            //handle row click event
+//            handle row click event
 //            itemView.setOnClickListener( new View.OnClickListener() {
 //                @Override
 //                public void onClick(View view) {
@@ -324,7 +324,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         }
                         break;
                     case R.id.ibReply:
-                        Toast.makeText(context, "reply", Toast.LENGTH_SHORT).show();
                         if(position != RecyclerView.NO_POSITION) {
                             if (position != RecyclerView.NO_POSITION) {
                                 Intent i = new Intent(context, ReplyActivity.class);

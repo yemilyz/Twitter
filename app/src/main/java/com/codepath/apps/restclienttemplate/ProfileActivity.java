@@ -1,23 +1,21 @@
 package com.codepath.apps.restclienttemplate;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.codepath.apps.restclienttemplate.Fragments.UserTimelineFragment;
+import com.codepath.apps.restclienttemplate.fragments.UserTimelineFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.parceler.Parcel;
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -51,6 +49,9 @@ public class ProfileActivity extends AppCompatActivity {
         ft.commit();
 
         client = TwitterApp.getRestClient();
+
+        getSupportActionBar().setCustomView(R.layout.actionbar_title);
+        getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 
         if (tweet != null){
             populateUserHeadline( tweet.user );

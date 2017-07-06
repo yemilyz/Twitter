@@ -1,11 +1,9 @@
-package com.codepath.apps.restclienttemplate.Fragments;
+package com.codepath.apps.restclienttemplate.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
-import com.codepath.apps.restclienttemplate.Fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;

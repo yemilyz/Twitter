@@ -33,6 +33,7 @@ import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 import static com.codepath.apps.restclienttemplate.R.id.ibRetweeter;
+import static com.codepath.apps.restclienttemplate.TimelineActivity.POSITION_KEY;
 import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_REPLY;
 import static com.codepath.apps.restclienttemplate.TwitterApp.context;
 
@@ -136,7 +137,8 @@ public class TweetDetailsActivity extends AppCompatActivity{
     public void putReply() {
         Intent i = new Intent(TweetDetailsActivity.this, ReplyActivity.class);
         i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-        ((AppCompatActivity)context).startActivityForResult(i, REQUEST_CODE_REPLY);
+        //((AppCompatActivity)context).startActivityForResult(i, REQUEST_CODE_REPLY);
+        context.startActivity( i );
     }
 
 
@@ -149,13 +151,11 @@ public class TweetDetailsActivity extends AppCompatActivity{
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
                     try {
-                        int oldRetweetCount = tweet.retweetCount;
                         tweet = Tweet.fromJSON(response);
-                        if(tweet.isRetweeted) {
-                            tweet.isRetweeted = false;
-                        }
-                        if(tweet.retweetCount > oldRetweetCount - 1) {
-                            tweet.retweetCount = oldRetweetCount - 1;
+                        Tweet newTweet = Tweet.fromJSON(response);
+                        tweet.isRetweeted = false;
+                        if(tweet.retweetCount > newTweet.retweetCount) {
+                            tweet.retweetCount = newTweet.retweetCount;
                         }
                         setRetweeted();
                     } catch (JSONException e) {
@@ -185,13 +185,10 @@ public class TweetDetailsActivity extends AppCompatActivity{
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
                     try {
-                        int oldRetweetCount = tweet.retweetCount;
-                        tweet = Tweet.fromJSON(response);
-                        if(!tweet.isRetweeted) {
-                            tweet.isRetweeted = true;
-                        }
-                        if(tweet.retweetCount < oldRetweetCount + 1) {
-                            tweet.retweetCount = oldRetweetCount + 1;
+                        Tweet newTweet = Tweet.fromJSON(response);
+                        tweet.isRetweeted = true;
+                        if(tweet.retweetCount < newTweet.retweetCount) {
+                            tweet.retweetCount = newTweet.retweetCount;
                         }
                         setRetweeted();
                     } catch (JSONException e) {
@@ -307,7 +304,7 @@ public class TweetDetailsActivity extends AppCompatActivity{
         Log.e("BackPressed", "started");
         Intent i = new Intent();
         i.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-        i.putExtra("Position", position);
+        i.putExtra(POSITION_KEY, position);
         setResult(RESULT_OK, i);
         finish();
     }

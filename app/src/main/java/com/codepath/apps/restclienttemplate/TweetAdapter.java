@@ -51,7 +51,7 @@ import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     private List<Tweet> mTweets;
-    private TweetAdapterListener mListener;
+//    private TweetAdapterListener mListener;
     Context context;
     TwitterClient client = TwitterApp.getRestClient();
     LayoutInflater inflater;
@@ -65,7 +65,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     //pass in Tweets array in the constructor
     public  TweetAdapter(List<Tweet> tweets, TweetAdapterListener listener){
         mTweets = tweets;
-        mListener = listener;
+//        mListener = listener;
 
     }
     //for each row, inflate layout and cache references (all the findById lookups) into ViewHolder class
@@ -81,7 +81,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public TweetAdapter(Context context, AdapterView.OnItemClickListener listener, List<Tweet> tweets) {
         inflater = LayoutInflater.from(context);
         this.mTweets = tweets;
-//        this.onItemClickListener = listener;
+        //this.onItemClickListener = listener;
     }
 
     //bind values based on position of the element
@@ -122,7 +122,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         Glide.with(context)
                 .load(tweet.user.profileImageUrl)
-                .bitmapTransform(new RoundedCornersTransformation(context,25,0))
+                .bitmapTransform(new RoundedCornersTransformation(context,50,0))
                 .into(holder.ivProfileImage);
 
         Glide.with(context)
@@ -166,22 +166,21 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ibHeart.setOnClickListener(this);
             tvFavoriteCount.setOnClickListener(this);
             ibMessage.setOnClickListener(this);
+            ivProfileImage.setOnClickListener( this );
             itemView.setOnClickListener(this);
 
-            //handle row click event
-            itemView.setOnClickListener( new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mListener!=null){
-                        //get position of element
-                        int position = getAdapterPosition();
-                        //fire listener callback
-                        mListener.onItemSelected( view, position  );
-                    }
-                }
-            } );
-
-
+//            //handle row click event
+//            itemView.setOnClickListener( new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (mListener!=null){
+//                        //get position of element
+//                        int position = getAdapterPosition();
+//                        //fire listener callback
+//                        mListener.onItemSelected( view, position  );
+//                    }
+//                }
+//            } );
         }
         @Override
         public void onClick(View v) {
@@ -189,6 +188,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             if (position != RecyclerView.NO_POSITION){
                 final Tweet tweet = mTweets.get(position);
                 switch(v.getId()){
+                    case R.id.ivProfileImage:
+                        Intent tent = new Intent(context, ProfileActivity.class);
+                        tent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                        context.startActivity( tent );
+                        break;
                     case R.id.ibHeart:
                         if (tweet.isFavorited){
                             client.setUnfavorite(tweet.uid, new JsonHttpResponseHandler(){
@@ -222,7 +226,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                 }
                             });
 
-                        }else{
+                        } else {
                             client.setFavorite(tweet.uid, new JsonHttpResponseHandler(){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -301,8 +305,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    //tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
-
                                 }
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -465,8 +467,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         Toast.makeText(context, "message", Toast.LENGTH_SHORT).show();
                         break;
                     default:
-                        //tweet = mTweets.get(position);
-                        Intent intent = new Intent(context, TweetDetailsActivity.class);
+                        Intent intent = new Intent( context, TweetDetailsActivity.class );
                         intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
                         intent.putExtra("Position", position);
                         ((AppCompatActivity)context).startActivityForResult(intent, REQUEST_CODE_DETAILS);

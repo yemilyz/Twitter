@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -57,6 +59,16 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         TabLayout tabLayout = (TabLayout) findViewById( R.id.sliding_tabs );
         tabLayout.setupWithViewPager( vpPager );
 
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), ComposeActivity.class);
+                startActivityForResult(i, REQUEST_CODE);
+            }
+        });
+
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
 //        getSupportActionBar().setDisplayUseLogoEnabled(true);
@@ -77,6 +89,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
 
     @Override
     public void onTweetSelected(Tweet tweet) {
-        Toast.makeText( this, tweet.body, Toast.LENGTH_SHORT ).show();
+
     }
 }

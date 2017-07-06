@@ -50,7 +50,7 @@ import static com.codepath.apps.restclienttemplate.models.SampleModel_Table.id;
 
 public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAdapterListener {
 
-    //MenuItem miActionProgressItem;
+    MenuItem miActionProgressItem;
 
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
@@ -185,16 +185,16 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
 
     public void fetchTimelineAsync(long page) {
     }
-//
-//    public void showProgressBar() {
-//        // Show progress item
-//        miActionProgressItem.setVisible(true);
-//    }
-//
-//    public void hideProgressBar() {
-//        // Hide progress item
-//        miActionProgressItem.setVisible(false);
-//    }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
+    }
 //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        if (REQUEST_CODE == requestCode && RESULT_OK == resultCode) {

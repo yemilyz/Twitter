@@ -6,9 +6,11 @@ import android.util.Log;
 
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -55,4 +57,30 @@ public class MentionsTimelineFragment extends TweetsListFragment {
             }
         });
     }
+    @Override
+    public void fetchTimelineAsync(long page) {
+        //Send the network request to fetch the updated data
+        // `client` here is an instance of Android Async HTTP
+        // getHomeTimeline is an example endpoint.
+        client.getMentionsTimeline( new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                // Remember to CLEAR OUT old items before appending in the new ones
+                tweetAdapter.clear();
+                // ...the data has come back, add new items to your adapter...
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        Tweet tweet = Tweet.fromJSON( response.getJSONObject( i ) );
+                        tweets.add( tweet );
+                        tweetAdapter.notifyItemInserted( tweets.size() - 1 );
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                swipeContainer.setRefreshing( false );
+                //hideProgressBar();
+            }
+        } );
+    }
+
 }

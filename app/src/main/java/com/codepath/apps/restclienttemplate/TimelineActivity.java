@@ -12,16 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.codepath.apps.restclienttemplate.fragments.HomeTimelineFragment;
-import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
-import com.codepath.apps.restclienttemplate.fragments.TweetsPagerAdapter;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
-
-import static com.codepath.apps.restclienttemplate.TwitterApp.context;
 
 public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
 
@@ -31,10 +24,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
     public static final String POSITION_KEY = "postionKey";
     ViewPager vpPager;
     TweetsPagerAdapter pagerAdapter;
-
-//    public TweetAdapter tweetAdapter;
-//    public ArrayList<Tweet> tweets;
-//    public RecyclerView rvTweets;
 
 
     @Override
@@ -66,11 +55,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         } );
         getSupportActionBar().setCustomView(R.layout.actionbar_title);
         getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
-//        getSupportActionBar().setDisplayUseLogoEnabled(true);
-//        tweets = new ArrayList<>();
-//        tweetAdapter = new TweetAdapter();
 
     }
 
@@ -114,9 +98,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
             Tweet newTweet = (Tweet) Parcels.unwrap(data.getParcelableExtra(Tweet.class.getSimpleName()));
             TweetsListFragment tweetsListFragment = (TweetsListFragment) pagerAdapter.getRegisteredFragment(0);
             tweetsListFragment.appendTweet(newTweet);
-//            tweets.add(0, newTweet);
-//            tweetAdapter.notifyItemInserted(0);
-//            rvTweets.scrollToPosition(0);
         }
     }
 }

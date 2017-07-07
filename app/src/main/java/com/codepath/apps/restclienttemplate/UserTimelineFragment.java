@@ -1,11 +1,9 @@
-package com.codepath.apps.restclienttemplate.fragments;
+package com.codepath.apps.restclienttemplate;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.codepath.apps.restclienttemplate.TwitterApp;
-import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;

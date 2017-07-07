@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.fragments;
+package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

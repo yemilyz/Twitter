@@ -1,30 +1,23 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
-import android.media.Image;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.utils.TimeFormatter;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
-
-import java.sql.Time;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,9 +25,7 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-import static com.codepath.apps.restclienttemplate.R.id.ibRetweeter;
 import static com.codepath.apps.restclienttemplate.TimelineActivity.POSITION_KEY;
-import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_REPLY;
 import static com.codepath.apps.restclienttemplate.TwitterApp.context;
 
 
@@ -65,6 +56,9 @@ public class TweetDetailsActivity extends AppCompatActivity{
         client = TwitterApp.getRestClient();
         tweet = Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
         position = getIntent().getIntExtra("Position", 0);
+
+        getSupportActionBar().setCustomView(R.layout.actionbar_title);
+        getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 
         Glide.with(this)
                 .load(tweet.user.profileImageUrl)
@@ -100,7 +94,7 @@ public class TweetDetailsActivity extends AppCompatActivity{
         tvName.setText(tweet.user.name);
         tvScreenName.setText("@"+tweet.user.screenName);
         tvTweet.setText(tweet.body);
-        tvTimeStamper.setText(TimeFormatter.getTimeStamp(tweet.createdAt));
+        tvTimeStamper.setText( TimeFormatter.getTimeStamp(tweet.createdAt));
         setFavorited();
         setRetweeted();
     }

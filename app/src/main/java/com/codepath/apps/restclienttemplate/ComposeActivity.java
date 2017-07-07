@@ -1,9 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
-import android.graphics.Movie;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -15,7 +13,6 @@ import android.text.TextWatcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -38,7 +35,7 @@ public class ComposeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compose);
+        setContentView( R.layout.activity_compose);
 
         getSupportActionBar().setCustomView(R.layout.actionbar_title);
         getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);

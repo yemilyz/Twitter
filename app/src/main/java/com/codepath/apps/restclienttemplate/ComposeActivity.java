@@ -39,6 +39,7 @@ public class ComposeActivity extends AppCompatActivity {
 
         getSupportActionBar().setCustomView(R.layout.actionbar_title);
         getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         etNewTweet = (EditText) findViewById(R.id.etNewTweet);

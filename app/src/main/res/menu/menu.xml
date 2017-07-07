@@ -8,7 +8,8 @@
         android:icon="@drawable/vector_compose_shortcut"
         android:title="tweet_icon"
         app:showAsAction="always"
-        android:orderInCategory="100"></item>
+        android:orderInCategory="100">
+    </item>
 
     <item
         android:id="@+id/miActionProgress"

@@ -20,7 +20,7 @@
                 android:layout_alignParentTop="true"
                 app:srcCompat="@android:color/black"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginStart="5dp"/>
 
             <TextView
                 android:id="@+id/tvName"
@@ -30,14 +30,14 @@
                 android:layout_toEndOf="@+id/ivProfImage"
                 android:text="@string/username"
                 android:textStyle="bold"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginStart="5dp"/>
 
             <TextView
                 android:id="@+id/tvScreenName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/handle"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_below="@+id/tvName"
                 android:layout_toEndOf="@+id/ivProfImage" />
 
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/ivMedia"
                 android:adjustViewBounds="true"
-                android:contentDescription="Twitter media here"
+                android:contentDescription="@string/media_note"
                 android:scaleType="fitXY"
                 android:layout_alignStart="@id/tvTweet"
                 android:layout_below="@+id/tvTweet"
@@ -70,17 +70,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                app:srcCompat="@drawable/reply_button_stroke"
+                app:srcCompat="@drawable/ic_reply"
                 android:layout_below="@+id/linearLayout2"
                 android:layout_alignParentStart="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_vector_retweet_stroke"
-                android:layout_marginLeft="80dp"
+                android:layout_marginStart="80dp"
                 android:background="#ffffff"
                 android:id="@+id/ibRetweeter"
                 android:layout_marginTop="10dp"
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_vector_heart_stroke"
-                android:layout_marginLeft="80dp"
+                android:layout_marginStart="80dp"
                 android:background="#ffffff"
                 android:id="@+id/ibHearter"
                 android:layout_below="@+id/linearLayout2"
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_vector_messages_stroke"
-                android:layout_marginLeft="80dp"
+                android:layout_marginStart="80dp"
                 android:background="#ffffff"
                 android:id="@+id/ibMessager"
                 android:layout_marginTop="10dp"
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ivMedia"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_alignEnd="@+id/tvTweet"
                 android:layout_alignParentStart="true"
                 android:text="@string/timestamp"/>
@@ -135,8 +135,8 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/linearLayout2"
                 android:background="@android:color/darker_gray"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_marginTop="5dp"/>
 
             <LinearLayout
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/retweetcount"
-                    android:layout_marginLeft="5dp" />
+                    android:layout_marginStart="5dp" />
 
                 <TextView
                     android:id="@+id/tvRetweetNum"
@@ -162,22 +162,20 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/retweet"
-                    android:layout_marginLeft="2dp"/>
+                    android:layout_marginStart="2dp"/>
 
                 <TextView
                     android:id="@+id/tvFavoriterCounter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/favcount"
-                    android:layout_marginLeft="5dp" />
+                    android:layout_marginStart="5dp" />
 
                 <TextView
                     android:id="@+id/tvFavNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/ibHearter"
-                    android:layout_marginLeft="2dp"
-                    android:layout_toEndOf="@+id/linearLayout2"
+                    android:layout_marginStart="2dp"
                     android:text="@string/likes" />
 
             </LinearLayout>

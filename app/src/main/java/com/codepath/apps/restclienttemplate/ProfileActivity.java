@@ -49,12 +49,24 @@ public class ProfileActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient();
 
-        getSupportActionBar().setCustomView(R.layout.actionbar_title);
-        getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
-
         if (tweet != null){
-            populateUserHeadline( tweet.user );
+            final User user = tweet.user;
+            populateUserHeadline( user );
+            client.getUserInfo( new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        //set title of actionbar based on user information
+                        getSupportActionBar().setTitle( "@" + user.screenName );
+                        //populate user headline
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } else {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
             client.getUserInfo( new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -80,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
         ImageView ivProfileImage = (ImageView) findViewById( R.id.ivProfileImage );
 
         tvName.setText( user.name );
-        tvTagline.setText( user.screenName );
+        tvTagline.setText( "@"+ user.screenName );
         tvFollowers.setText( user.followersCount + " Followers" );
         tvFollowing.setText( user.followingCount + " Following" );
 

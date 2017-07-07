@@ -16,5 +16,13 @@
     <string name="timestamp">Timestamp</string>
     <string name="body">Tweet</string>
     <string name="Media">Twitter Media</string>
+    <string name="login_screen">Login. Here we go!</string>
+    <string name="login">Login</string>
+    <string name="char_count">140</string>
+    <string name="tagline">Tagline</string>
+    <string name="followers">Followers</string>
+    <string name="following">5 Following</string>
+    <string name="media_note">Twitter media here</string>
+    <string name="profile">Profile</string>
 
 </resources>

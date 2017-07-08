@@ -35,6 +35,7 @@ public class ReplyActivity extends AppCompatActivity {
         // Unwrap the intent
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra(Tweet.class.getSimpleName()));
         client = TwitterApp.getRestClient();
+        getSupportActionBar().setTitle( "Reply" );
 
         Button btSubmitReply = (Button) findViewById(R.id.btnSubmit);
         btSubmitReply.setOnClickListener(new View.OnClickListener() {

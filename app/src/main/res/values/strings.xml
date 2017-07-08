@@ -24,5 +24,6 @@
     <string name="following">5 Following</string>
     <string name="media_note">Twitter media here</string>
     <string name="profile">Profile</string>
+    <string name="reply">Tweet your reply</string>
 
 </resources>

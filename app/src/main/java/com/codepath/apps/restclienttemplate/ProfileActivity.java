@@ -29,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         String screenName = getIntent().getStringExtra( "screen_name" );
 
+
         Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra( Tweet.class.getSimpleName() ));
 
         //create user fragment
@@ -36,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
             screenName = tweet.user.screenName;
         }
 
-        UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance( screenName );
+        UserTimelineFragment userTimelineFragment = UserTimelineFragment. newInstance( screenName );
 
         //display the user timeline fragment inside container dynamically
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

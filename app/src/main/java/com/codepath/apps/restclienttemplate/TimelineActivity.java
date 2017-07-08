@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 
 import org.parceler.Parcels;
+
+import static com.codepath.apps.restclienttemplate.R.id.compose;
+import static com.codepath.apps.restclienttemplate.R.id.image;
 
 public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
 
@@ -49,10 +54,12 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         floatingActionButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent( getApplicationContext(), ComposeActivity.class );
-                startActivityForResult( i, REQUEST_CODE );
+                FragmentManager fm = getSupportFragmentManager();
+                ComposeFragment composeFragment = ComposeFragment.newInstance();
+                composeFragment.show(fm, "fragment_compose");
             }
         } );
+
         getSupportActionBar().setCustomView(R.layout.actionbar_title);
         getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 
@@ -100,4 +107,5 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
             tweetsListFragment.appendTweet(newTweet);
         }
     }
+
 }

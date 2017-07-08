@@ -50,23 +50,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp">
+            android:layout_marginStart="15dp">
 
             <TextView
                 android:id="@+id/tvCharacterCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/btnSubmiting"
+                android:layout_alignBaseline="@+id/btnSubmitting"
                 android:gravity="center"
                 android:text="@string/char_count"/>
 
             <Button
-                android:id="@+id/btnSubmiting"
+                android:id="@+id/btnSubmitting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/submit"
+                android:text="@string/tweet"
+                android:textAllCaps="false"
                 android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/tvCharacterCount"/>
+                android:layout_toEndOf="@+id/tvCharacterCount"
+                android:layout_marginStart="5dp"/>
         </RelativeLayout>
     </LinearLayout>
 

@@ -32,8 +32,8 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import static android.app.Activity.RESULT_OK;
 import static com.codepath.apps.restclienttemplate.R.id.btnSubmit;
 import static com.codepath.apps.restclienttemplate.R.id.etNewTweet;
+import static com.codepath.apps.restclienttemplate.R.id.etTweet;
 import static com.codepath.apps.restclienttemplate.R.id.ivProfileImage;
-import static com.codepath.apps.restclienttemplate.R.id.ivSmallProfileImage;
 import static com.codepath.apps.restclienttemplate.R.id.tvCharCount;
 
 /**
@@ -41,8 +41,7 @@ import static com.codepath.apps.restclienttemplate.R.id.tvCharCount;
  */
 
 public class ComposeFragment extends DialogFragment {
-    private EditText etTweet;
-    private Button btnSubmitting;
+    private EditText mNewTweet;
     private TextView tvCharacterCount;
 
     private TwitterClient client;
@@ -54,6 +53,7 @@ public class ComposeFragment extends DialogFragment {
 
     // Empty constructor required for DialogFragment
     public ComposeFragment() {
+
     }
 
     public static ComposeFragment newInstance() {
@@ -73,12 +73,12 @@ public class ComposeFragment extends DialogFragment {
 
         client = TwitterApp.getRestClient();
 
-        etTweet = (EditText) view.findViewById( R.id.etTweet );
-        btnSubmitting = (Button) view.findViewById( R.id.btnSubmiting );
+        mNewTweet = (EditText) view.findViewById( R.id.etTweet );
+        Button btnComposeSubmit = (Button) view.findViewById( R.id.btnSubmitting );
 
         final TextView tvCharacterCount = (TextView) view.findViewById( R.id.tvCharacterCount );
 //        EditText etNewTweet = (EditText) view.findViewById(R.id.etNewTweet);
-        etTweet.addTextChangedListener( new TextWatcher() {
+        mNewTweet.addTextChangedListener( new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -96,16 +96,16 @@ public class ComposeFragment extends DialogFragment {
         // Set the title
         getDialog().setTitle( "Compose Tweet" );
 
-        etTweet.requestFocus();
+        mNewTweet.requestFocus();
         getDialog().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE );
 
-        btnSubmitting.setOnClickListener( new View.OnClickListener() {
+        btnComposeSubmit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText( getActivity(), "Submitting tweet", Toast.LENGTH_SHORT ).show();
-                if (v.getId() == R.id.btnSubmiting) {
+                if (v.getId() == R.id.btnSubmitting) {
                     Toast.makeText( getActivity(), "Submitting tweet", Toast.LENGTH_SHORT ).show();
-                    String newTweetText = etTweet.getText().toString();
+                    String newTweetText = mNewTweet.getText().toString();
                     client.sendTweet( newTweetText, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -116,7 +116,6 @@ public class ComposeFragment extends DialogFragment {
                                 ComposeDialogListener listener = (ComposeDialogListener) getActivity();
                                 listener.onFinishComposeDialog( tweet );
                                 dismiss();
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -129,14 +128,9 @@ public class ComposeFragment extends DialogFragment {
                             try {
                                 for (int i = 0; i < response.length(); i++) {
                                     tweet = Tweet.fromJSON( response.getJSONObject( i ) );
-//                                Intent intent = new Intent(ComposeActivity.this, TimelineActivity.class);
-//                                intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
-//                                setResult(RESULT_OK, intent);
-//                                finish();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-//                            Toast.makeText(ComposeActivity.this, "Failed to submit tweet", Toast.LENGTH_SHORT).show();
                             }
                             dismiss();
                         }

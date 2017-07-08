@@ -25,5 +25,6 @@
     <string name="media_note">Twitter media here</string>
     <string name="profile">Profile</string>
     <string name="reply">Tweet your reply</string>
+    <string name="tweet">Tweet</string>
 
 </resources>

@@ -21,12 +21,13 @@ import org.parceler.Parcels;
 import static com.codepath.apps.restclienttemplate.R.id.compose;
 import static com.codepath.apps.restclienttemplate.R.id.image;
 
-public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
+public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener , ComposeFragment.ComposeDialogListener {
 
     private final int REQUEST_CODE = 2;
     public static final int REQUEST_CODE_DETAILS = 1;
     public static final int REQUEST_CODE_REPLY = 3;
     public static final String POSITION_KEY = "postionKey";
+
     ViewPager vpPager;
     TweetsPagerAdapter pagerAdapter;
 
@@ -49,6 +50,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         TabLayout tabLayout = (TabLayout) findViewById( R.id.sliding_tabs );
         tabLayout.setupWithViewPager( vpPager );
 
+        getSupportActionBar().setCustomView(R.layout.actionbar_title);
+        getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
+
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById( R.id.floatingActionButton );
 
         floatingActionButton.setOnClickListener( new View.OnClickListener() {
@@ -59,9 +63,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
                 composeFragment.show(fm, "fragment_compose");
             }
         } );
-
-        getSupportActionBar().setCustomView(R.layout.actionbar_title);
-        getSupportActionBar().setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME);
 
     }
 
@@ -108,4 +109,13 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         }
     }
 
+    @Override
+    public void onFinishComposeDialog(Tweet tweet) {
+        TweetsListFragment currentFragment = pagerAdapter.getRegisteredFragment(vpPager.getCurrentItem());
+        if(currentFragment instanceof HomeTimelineFragment) {
+            currentFragment.tweets.set( 0, tweet );
+            currentFragment.tweetAdapter.notifyItemInserted( 0 );
+            currentFragment.rvTweets.scrollToPosition( 0 );
+        }
+    }
 }

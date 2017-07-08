@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,17 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.codepath.apps.restclienttemplate.listeners.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TweetAdapter;
-import com.codepath.apps.restclienttemplate.TwitterApp;
-import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.app.TwitterApp;
+import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -170,16 +170,15 @@ public abstract class TweetsListFragment extends Fragment implements TweetAdapte
 
     public void fetchTimelineAsync(long page) {
     }
-
-    public void showProgressBar() {
-        // Show progress item
-        miActionProgressItem.setVisible(true);
-    }
-
-    public void hideProgressBar() {
-        // Hide progress item
-        miActionProgressItem.setVisible(false);
-    }
+//    public void showProgressBar() {
+//        // Show progress item
+//        miActionProgressItem.setVisible(true);
+//    }
+//
+//    public void hideProgressBar() {
+//        // Hide progress item
+//        miActionProgressItem.setVisible(false);
+//    }
 
     public void appendTweet(Tweet tweet) {
         tweets.add(0, tweet);
@@ -193,6 +192,9 @@ public abstract class TweetsListFragment extends Fragment implements TweetAdapte
         //  --> Deserialize and construct new model objects from the API response
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+    }
+
+    public interface LoadingProgressDialog {
     }
 
 //    @Override

@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.restclienttemplate.activities.ReplyActivity;
+import com.codepath.apps.restclienttemplate.app.TwitterApp;
+import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.utils.TimeFormatter;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -25,8 +28,8 @@ import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-import static com.codepath.apps.restclienttemplate.TimelineActivity.POSITION_KEY;
-import static com.codepath.apps.restclienttemplate.TwitterApp.context;
+import static com.codepath.apps.restclienttemplate.activities.TimelineActivity.POSITION_KEY;
+import static com.codepath.apps.restclienttemplate.app.TwitterApp.context;
 
 
 public class TweetDetailsActivity extends AppCompatActivity{

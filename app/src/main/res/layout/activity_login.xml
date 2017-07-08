@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/image2"
-              tools:context="com.codepath.apps.restclienttemplate.LoginActivity">
+              tools:context="com.codepath.apps.restclienttemplate.activities.LoginActivity">
 
     <Button
         android:layout_width="match_parent"

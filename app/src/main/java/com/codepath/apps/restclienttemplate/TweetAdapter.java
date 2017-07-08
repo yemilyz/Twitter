@@ -15,6 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.restclienttemplate.activities.ProfileActivity;
+import com.codepath.apps.restclienttemplate.activities.ReplyActivity;
+import com.codepath.apps.restclienttemplate.app.TwitterApp;
+import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.utils.TimeFormatter;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -31,8 +35,8 @@ import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_DETAILS;
-import static com.codepath.apps.restclienttemplate.TimelineActivity.REQUEST_CODE_REPLY;
+import static com.codepath.apps.restclienttemplate.activities.TimelineActivity.REQUEST_CODE_DETAILS;
+import static com.codepath.apps.restclienttemplate.activities.TimelineActivity.REQUEST_CODE_REPLY;
 
 
 /**

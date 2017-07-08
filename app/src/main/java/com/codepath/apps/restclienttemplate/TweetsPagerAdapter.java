@@ -7,6 +7,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.codepath.apps.restclienttemplate.fragments.HomeTimelineFragment;
+import com.codepath.apps.restclienttemplate.fragments.MentionsTimelineFragment;
+import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
+
 /**
  * Created by emilyz on 7/3/17.
  */

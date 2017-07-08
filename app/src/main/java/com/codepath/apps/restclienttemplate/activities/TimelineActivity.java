@@ -1,25 +1,30 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TweetDetailsActivity;
+import com.codepath.apps.restclienttemplate.TweetsPagerAdapter;
+import com.codepath.apps.restclienttemplate.fragments.ComposeFragment;
+import com.codepath.apps.restclienttemplate.fragments.HomeTimelineFragment;
+import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.codepath.apps.restclienttemplate.models.User;
 
 import org.parceler.Parcels;
-
-import static com.codepath.apps.restclienttemplate.R.id.compose;
-import static com.codepath.apps.restclienttemplate.R.id.image;
 
 public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener , ComposeFragment.ComposeDialogListener {
 
@@ -28,8 +33,8 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
     public static final int REQUEST_CODE_REPLY = 3;
     public static final String POSITION_KEY = "postionKey";
 
-    ViewPager vpPager;
-    TweetsPagerAdapter pagerAdapter;
+    public static ViewPager vpPager;
+    public static TweetsPagerAdapter pagerAdapter;
 
 
     @Override
@@ -69,6 +74,29 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate( R.menu.menu_timeline, menu );
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//        searchItem.expandActionView();
+//        searchView.requestFocus();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
+                i.putExtra("search_query", query);
+                startActivity(i);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 

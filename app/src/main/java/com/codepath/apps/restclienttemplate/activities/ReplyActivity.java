@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.app.TwitterApp;
+import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -20,6 +23,8 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
+
+import static com.codepath.apps.restclienttemplate.R.id.etNewTweet;
 
 public class ReplyActivity extends AppCompatActivity {
 
@@ -41,7 +46,7 @@ public class ReplyActivity extends AppCompatActivity {
         btSubmitReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText etNewReply = (EditText) findViewById(R.id.etNewTweet);
+                EditText etNewReply = (EditText) findViewById( etNewTweet);
                 String newReplyText = "@" + tweet.user.screenName + " " +  etNewReply.getText().toString();
                 // Send the request and parameters to the endpoint
                 client.replyTweet(newReplyText, tweet.uid, new JsonHttpResponseHandler() {
@@ -83,7 +88,7 @@ public class ReplyActivity extends AppCompatActivity {
 
 
         final TextView tvCharacterCount = (TextView) findViewById(R.id.tvCharCount);
-        EditText etNewTweet = (EditText) findViewById(R.id.etNewTweet);
+        EditText etNewTweet = (EditText) findViewById( R.id.etNewTweet);
         etNewTweet.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -92,14 +92,14 @@ The following **optional** features are implemented:
 * [x] While composing a tweet, user can see a character counter with characters remaining for tweet out of 140
 * [x] User can **pull down to refresh tweets** in either timeline.
 * [x] Improve the user interface and theme the app to feel twitter branded with colors and styles
-* [ ] User can **search for tweets matching a particular query** and see results.
+* [x] User can **search for tweets matching a particular query** and see results.
 * [ ] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
 * [x] User can **"reply" to any tweet on their home timeline**
   * [x] The user that wrote the original tweet is automatically "@" replied in compose
 * [x] User can click on a tweet to be **taken to a "detail view"** of that tweet
  * [x] User can take favorite (and unfavorite) or retweet actions on a tweet
 * [x] User can see embedded image media within the tweet item in list or detail view.
-* [ ] Compose activity is replaced with a modal compose overlay.
+* [x] Compose activity is replaced with a modal compose overlay.
 * [ ] User can **click a link within a tweet body** on tweet details view. The click will launch the web browser with relevant page opened.
 * [x] Used Parcelable instead of Serializable leveraging the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler) when passing data between activities.
 * [x] Replaced all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.

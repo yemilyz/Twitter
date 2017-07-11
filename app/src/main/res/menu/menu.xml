@@ -3,13 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Menu file for `activity_movies.xml` is located in a file
      such as `res/menu/menu_movies.xml`  -->
-    <item
-        android:id="@+id/tweetIcon"
-        android:icon="@drawable/vector_compose_shortcut"
-        android:title="tweet_icon"
-        app:showAsAction="always"
-        android:orderInCategory="100">
-    </item>
 
     <item
         android:id="@+id/miActionProgress"
